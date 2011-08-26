@@ -144,6 +144,11 @@ window.Notification = (function(){
 				}
 				return false;
 			}
+			else if( "mozNotification" in window.navigator ){
+				var m = window.navigator.mozNotification.createNotification( title, description, icon );
+				m.show();
+				return true;
+			}
 			else {
 				return null;
 			}
