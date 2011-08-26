@@ -53,6 +53,11 @@ window.Notification = (function(){
 		if(n){
 			n.cancel();
 		}
+		
+		// if an IE overlay is present, kill it
+		if("external" in window && "msSiteModeClearIconOverlay" in window.external ){
+			window.external.msSiteModeClearIconOverlay();
+		}
 	
 		// dont do any more if we haven't got anything open
 		if(a.length===0){
@@ -124,6 +129,11 @@ window.Notification = (function(){
 			if(("external" in window) && ("msIsSiteMode" in window.external)){
 				if(window.external.msIsSiteMode()){
 					window.external.msSiteModeActivate();
+					
+					if(icon){
+						window.external.msSiteModeSetIconOverlay(icon, title);
+					}
+
 					return true;
 				}
 				return false;
