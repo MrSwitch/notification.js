@@ -14,6 +14,12 @@ body
     font-size: 0.9em;
 }
 
+header {
+	background:url(favicon.ico) no-repeat left center;
+	padding:10px 80px;
+	background-size:64px;
+}
+
 @media all and (max-width: 600px) {
 	body{
 		padding:10px;
