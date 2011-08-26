@@ -14,7 +14,9 @@
 		<p>This is polyfill/shim for the <a href="http://dev.w3.org/2006/webapi/WebNotifications/publish/Notifications.html">
 		(w3c, draft) Notifications API</a>.</p>
 		
-	<p> Simply put, this shim uses various techniques to bring a user back to a page, this could be especially usefiul if they were waiting for something to occur, perhaps they have received a new message.</p>
+	<p> Simply put, this shim uses various techniques to bring a user back to a page, this could be especially useful 
+	if they were waiting for something to occur. e.g. when a video has finished 
+	uploading to Youtube or perhaps you&#39;ve received a new message in your inbox.</p>
 	
 	<p><strong>WARNING</strong>: browsers are yet to implement <a href="http://www.w3.org/TR/notifications/">http://www.w3.org/TR/notifications/</a>, when they do, this shall move the goal, can't do it now because of permissions - i should probably change the namespace to, nrrrgh</p>
 	</blockquote>
@@ -22,7 +24,8 @@
 
 <h2>features</h2>
 <p>This shim 
-is all about capturing your attention and bringing you back to the page. It employs various "eye catching" techniques, different browsers have different approaches and API's - check them out below.</p>
+is all about capturing your attention and bringing you back to the page. It employs various "eye catching" techniques, 
+leveraging the best the browser can offer. Checkout the techniques below.</p>
 
 
 
@@ -138,7 +141,8 @@ Notification.createNotification("star.ico","Hello","This is a test");
 
 <h2>enable desktop notifications</h2>
 <h3>check permission</h3>
-<p>To use the desktop notifications we need to request permission. So first lets check whether we the browser supports it?</p>
+<p>To use the desktop notifications we need to request permission. So first lets check whether 
+your browser supports it?</p>
 <pre>
 var chck = Notification.checkPermission();
 if( chck === 0 ){
