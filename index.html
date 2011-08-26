@@ -11,17 +11,17 @@
 
 	<blockquote>
 		<p>This is polyfill/shim for the <a href="http://dev.w3.org/2006/webapi/WebNotifications/publish/Notifications.html">
-		(w3c, draft) Notifications API</a></p>
+		(w3c, draft) Notifications API</a>.</p>
 		
 	<p> Simply put, this shim uses various techniques to bring a user back to a page, this could be especially usefiul if they were waiting for something to occur, perhaps they have received a new message.</p>
+	
+	<p><strong>WARNING</strong>: browsers are yet to implement <a href="http://www.w3.org/TR/notifications/">http://www.w3.org/TR/notifications/</a>, when they do, this shall move the goal, can't do it now because of permissions - i should probably change the namespace to, nrrrgh</p>
 	</blockquote>
+
 
 <h2>features</h2>
 <p>This shim 
-is all about capturing your attention and bring you back to the page. There are 
-various techniques which notification.js employs to capture your users 
-attention. Each one has limitations in todays 
-browsers... checkout the techniques below.</p>
+is all about capturing your attention and bringing you back to the page. It employs various "eye catching" techniques, different browsers have different approaches and API's - check them out below.</p>
 
 
 
@@ -97,12 +97,17 @@ browsers... checkout the techniques below.</p>
 
 
 <h2>quicky</h2>
-<h3>install</h3>
+<h3>1. download</h3>
+
+<p><a class="source" href="https://github.com/MrSwitch/notification.js/blob/master/notification.js">notification.js</a>
+</p>
+<br />
+<h3>2. install</h3>
 <pre>
 &lt;script src=&quot;notification.js&quot;&gt;&lt;/script&gt;
 </pre>
 
-<h3>send a message</h3>
+<h3>3. send a message</h3>
 <p><code>createNotification( url Image, string Title, string Description);</code></p>
 <pre class="demo">
 Notification.createNotification("","Hello","This is a test");
@@ -153,7 +158,7 @@ for(var i=0;i<btns.length;i++){
 		btns[i].innerHTML = "try it";
 		btns[i].onclick = function(){
 			var btn = this;
-			setTimeout( function(){ eval(btn.previousElementSibling.innerText); }, 400);
+			setTimeout( function(){ eval(btn.previousElementSibling.innerText); }, 100);
 		};
 	}
 }

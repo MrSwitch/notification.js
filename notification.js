@@ -2,24 +2,30 @@
  * Notification JS
  * Creates Notifications
  * @author Andrew Dodson
- * 
  */
+
 window.Notification = (function(){
 	
 	var a = [], int, i=0, n;
 
 	function swaptitle(title){
 	
-		if(a.length>0){
-			a.push(title);
+		if(a.length===0){
+			a = [document.title]
 		}
-		else {
-			a = [document.title, title];
-		}
+
+		a.push(title);
 
 		if(!int){
 			int = setInterval(function(){
-				document.title = a[i++%a.length];
+
+				// has document.title changed externally?
+				if(a.indexOf(document.title) === -1 ){
+					// update the default title
+					a[0] = document.title;
+				}
+				
+				document.title = a[++i%a.length];
 			}, 1000);
 		}
 	}
