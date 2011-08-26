@@ -20,7 +20,7 @@ header {
 	background-size:64px;
 }
 
-@media all and (max-width: 600px) {
+@media all and (max-width: 1000px) {
 	body{
 		padding:10px;
 	}
