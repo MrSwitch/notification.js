@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>notification.js</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/> 
+    <script src="notification.js"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header><h1>notification.js</h1></header>
+
+	<blockquote>
+		<p>This is polyfill/shim for the <a href="http://dev.w3.org/2006/webapi/WebNotifications/publish/Notifications.html">
+		(w3c, draft) Notifications API</a></p>
+		
+	<p> Simply put, this shim uses various techniques to bring a user back to a page, this could be especially usefiul if they were waiting for something to occur, perhaps they have received a new message.</p>
+	</blockquote>
+
+<h2>features</h2>
+<p>This shim 
+is all about capturing your attention and bring you back to the page. There are 
+various techniques which notification.js employs to capture your users 
+attention. Each one has limitations in todays 
+browsers... checkout the techniques below.</p>
+
+
+
+<h3>techniques vs. browsers</h3>
+	<table>
+		<thead>
+			<tr>
+				<td></td>
+				<th><div class="ie6"></div>IE6</th>
+				<th><div class="ie7"></div>IE7</th>
+				<th><div class="ie8"></div>IE8</th>
+				<th><div class="ie9"></div>IE9</th>
+				<th><div class="ie10"></div>IE10</th>
+				<th><div class="cr"></div>CR14</th>
+				<th><div class="cr"></div>CR15</th>
+				<th><div class="ff"></div>FF3.6</th>
+				<th><div class="ff"></div>FF6.0</th>
+				<th><div class="ff"></div>FF7.0</th>
+				<th><div class="sa"></div>SA5.1</th>
+				<th><div class="op"></div>OP11</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th>Alternating <code>document.title</code>
+					<p>Alternate the text in the window/tab is a good eye catcher.</p></th>
+				<td class="yes"></td>
+				<td class="yes"></td>
+				<td class="yes"></td>
+				<td class="yes"></td>
+				<td class="yes"></td>
+				<td class="yes"></td>
+				<td class="yes"></td>
+				<td class="yes"></td>
+				<td class="yes"></td>
+				<td class="yes"></td>
+				<td class="yes"></td>
+				<td class="yes"></td>
+			</tr>
+			<tr>
+				<th>Desktop Notification<p>Create a popup on your desktop which can be viewed outside the browser</p></th>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td class="yes"></td>
+				<td class="yes"></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			<tr>
+				<th>Flashing TaskBar Icon
+				<p>Used only with IE pinned sites we may flash the taskbar icon</p></th>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td class="yes"></td>
+				<td class="yes"></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+		</tbody>
+	</table>
+
+
+<h2>quicky</h2>
+<h3>install</h3>
+<pre>
+&lt;script src=&quot;notification.js&quot;&gt;&lt;/script&gt;
+</pre>
+
+<h3>send a message</h3>
+<p><code>createNotification( url Image, string Title, string Description);</code></p>
+<pre class="demo">
+Notification.createNotification("","Hello","This is a test");
+</pre>
+<button></button>
+
+<h2>enable desktop notifications</h2>
+<h3>check permission</h3>
+<p>To use the desktop notifications we need to request permission. So first lets check whether we the browser supports it?</p>
+<pre>
+var chck = Notification.checkPermission();
+if( chck === 0 ){
+	alert("Yes enabled") 
+}
+else if( chck === 1 ){
+	alert("Browser supports it, but not enabled") 
+}
+else if( chck === -1 ){
+	alert("Browser does not support it") 
+}
+</pre>
+<button onclick="eval(this.previousElementSibling.innerText);"></button>
+<p>If&nbsp; <code>checkPermission === 1</code>, then perhaps prompt the user to 
+enable it?</p>
+<pre>
+if(Notification.checkPermission() === 1){
+	// show a button to enable permissions
+}
+</pre>
+
+<h3>request permission</h3>
+<pre>
+// attach this to a button click event or automatically load it.
+Notification.requestPermission();
+</pre>
+<button onclick="Notification.requestPermission()">try it</button>
+
+
+<h2>that's all folks</h2>
+<p>Now go to first demo above and run it!</p>
+
+
+<script>
+
+var btns = document.getElementsByTagName('button');
+for(var i=0;i<btns.length;i++){
+	if(!btns[i].innerHTML){
+		btns[i].innerHTML = "try it";
+		btns[i].onclick = function(){
+			var btn = this;
+			setTimeout( function(){ eval(btn.previousElementSibling.innerText); }, 400);
+		};
+	}
+}
+
+</script>
+
+</body>
+</html>
