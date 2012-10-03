@@ -2,11 +2,12 @@
  * Notification JS
  * Creates Notifications
  * @author Andrew Dodson
+ * @website http://mrswitch.github.com/notification.js/
  */
 
 window.Notification = (function(){
 	
-	var a = [], int, i=0, n;
+	var a = [], int, i=0, n, callbacks = [], ttl = 0;
 
 	function swaptitle(title){
 	
@@ -69,6 +70,12 @@ window.Notification = (function(){
 		document.title = a[0];
 		a = [];
 		i = 0;
+		
+		// trigger any click callbacks;
+		for(var i=0;i<callbacks.length;i++){
+			try{ callbacks[i](); }catch(e){}
+		}
+		callbacks = [];
 	});
 
 	return {
@@ -78,10 +85,13 @@ window.Notification = (function(){
 	
 			// IE9
 			if(("external" in window) && ("msIsSiteMode" in window.external)){
-				if( !window.external.msIsSiteMode() ){
-					window.external.msAddSiteMode();
-	 				return true;
+				try{
+					if( !window.external.msIsSiteMode() ){
+						window.external.msAddSiteMode();
+		 				return true;
+					}
 				}
+				catch(e){}
 				return false;
 			}
 			else if("webkitNotifications" in window){
@@ -105,24 +115,33 @@ window.Notification = (function(){
 			else if("webkitNotifications" in window){
 				return window.webkitNotifications.checkPermission() === 0 ? 0 : 1;
 			}
+			else if("mozNotification" in window.navigator){
+				return 0;
+			}
 			else {
 				return -1;
 			}
 		},
 	
-		createNotification : function(icon, title, description, ttl){
-			// Create a notification
-			// @icon string
-			// @title string
-			// @description string
-			// @ttl string
-			
+		// Create a notification
+		// @icon string
+		// @title string
+		// @description string
+		// @callback function
+		createNotification : function(icon, title, description, callback){
 			
 			//
 			// Swap document.title
 			//
 			swaptitle(title);			
-	
+
+			//
+			// Add callback
+			//
+			if(callback){
+				callbacks.push(callback);
+			}
+
 			// 
 			// Create Desktop Notifications
 			// 
