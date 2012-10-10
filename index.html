@@ -121,19 +121,18 @@ leveraging the best the browser can offer. Checkout the techniques below.</p>
 
 <h3>3. send a message</h3>
 <p><code>createNotification( url Image, string Title, string Description);</code></p>
-<pre class="demo">
+<pre class="tryit">
 if(Notification.checkPermission() === 1){
 	Notification.requestPermission();
 }
 Notification.createNotification("star.ico","Hello","This is a test");
 </pre>
-<button></button>
 
 <h2>enable desktop notifications</h2>
 <h3>check permission</h3>
 <p>To use the desktop notifications we need to request permission. So first lets check whether 
 your browser supports it?</p>
-<pre>
+<pre class="tryit">
 var chck = Notification.checkPermission();
 if( chck === 0 ){
 	alert("Yes enabled") 
@@ -145,7 +144,6 @@ else if( chck === -1 ){
 	alert("Browser does not support it") 
 }
 </pre>
-<button onclick="eval(this.previousElementSibling.innerText);"></button>
 <p>If&nbsp; <code>checkPermission === 1</code>, then perhaps prompt the user to 
 enable it?</p>
 <pre>
@@ -155,31 +153,14 @@ if(Notification.checkPermission() === 1){
 </pre>
 
 <h3>request permission</h3>
-<pre>
+<pre class="tryit">
 // attach this to a button click event or automatically load it.
 Notification.requestPermission();
 </pre>
-<button onclick="Notification.requestPermission()">try it</button>
 
 
 <h2>that's all folks</h2>
 <p>Now go to first demo above and run it!</p>
-
-<script>
-
-var btns = document.getElementsByTagName('button');
-for(var i=0;i<btns.length;i++){
-	if(!btns[i].innerHTML){
-		btns[i].innerHTML = "try it";
-		btns[i].onclick = function(){
-			var btn = this,
-				t = btn.previousElementSibling;
-			setTimeout( function(){ eval(t.innerText||t.textContent); }, 100);
-		};
-	}
-}
-
-</script>
 
 </body>
 </html>
