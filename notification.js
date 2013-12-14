@@ -1,18 +1,31 @@
 ﻿/**
  * Notification JS
- * Creates Notifications
+ * Shims up the Notification API
+ *
  * @author Andrew Dodson
- * @website http://mrswitch.github.com/notification.js/
+ * @website http://adodson.com/notification.js/
  */
 
-window.Notification = (function(){
+//
+// Does the browser support the the Notification API?
+// .. and does it have a permission property?
+//
+
+(function(window, document){
+
+	var PERMISSION_GRANTED = 'granted',
+		PERMISSION_DENIED = 'denied',
+		PERMISSION_UNKNOWN = 'unknown';
 	
 	var a = [], int, i=0, n, callbacks = [], ttl = 0;
 
+	//
+	// Swap the document.title with the notification
+	//
 	function swaptitle(title){
 	
 		if(a.length===0){
-			a = [document.title]
+			a = [document.title];
 		}
 
 		a.push(title);
@@ -31,6 +44,8 @@ window.Notification = (function(){
 		}
 	}
 	
+	//
+	// Add aevent handlers
 	function addEvent(el,name,func){
 		if(name.match(" ")){
 			var a = name.split(' ');
@@ -39,127 +54,112 @@ window.Notification = (function(){
 			}
 		}
 		if(el.addEventListener){
-		    el.removeEventListener(name, func, false);
-		    el.addEventListener(name, func, false);
+			el.removeEventListener(name, func, false);
+			el.addEventListener(name, func, false);
 		}
 		else {
-		    el.detachEvent('on'+name, func);
-		    el.attachEvent('on'+name, func);
+			el.detachEvent('on'+name, func);
+			el.attachEvent('on'+name, func);
 		}
 	}
-	
-	addEvent(window, "focus scroll click", function(){
-	
-		// if a webkit Notification is open, kill it
-		if(n){
-			n.cancel();
-		}
-		
-		// if an IE overlay is present, kill it
-		if("external" in window && "msSiteModeClearIconOverlay" in window.external ){
-			window.external.msSiteModeClearIconOverlay();
-		}
-	
-		// dont do any more if we haven't got anything open
-		if(a.length===0){
-			return;
-		}
-		clearInterval(int);
-		
-		int = false;
-		document.title = a[0];
-		a = [];
-		i = 0;
-		
-		// trigger any click callbacks;
-		for(var i=0;i<callbacks.length;i++){
-			try{ callbacks[i](); }catch(e){}
-		}
-		callbacks = [];
-	});
 
-	return {
-		requestPermission : function(cb){
-			// Setup
-			// triggers the authentication to create a notification
-	
-			// IE9
-			if(("external" in window) && ("msIsSiteMode" in window.external)){
-				try{
-					if( !window.external.msIsSiteMode() ){
-						window.external.msAddSiteMode();
-		 				return true;
-					}
-				}
-				catch(e){}
-				return false;
+
+	function check_permission(){
+		// Check whether the current desktop supports notifications and if they are authorised,
+		// PERMISSION_GRANTED (yes they are supported and permission is granted),
+		// PERMISSION_DENIED (yes they are supported, permission has not been granted),
+		// -1 (Notifications are not supported)
+		
+		// IE9
+		if(("external" in window) && ("msIsSiteMode" in window.external)){
+			return window.external.msIsSiteMode()? PERMISSION_GRANTED : PERMISSION_UNKNOWN;
+		}
+		else if("webkitNotifications" in window){
+			return window.webkitNotifications.checkPermission() === 0 ? PERMISSION_GRANTED : PERMISSION_DENIED;
+		}
+		else if("mozNotification" in window.navigator){
+			return PERMISSION_GRANTED;
+		}
+		else {
+			return PERMISSION_UNKNOWN;
+		}
+	}
+
+	function update_permission(){
+		// Define the current state
+		window.Notification.permission = check_permission();
+		return window.Notification.permission;
+	}
+
+
+	if(!Object(window.Notification).permission){
+
+		//
+		// Bind event handlers to the body
+		addEvent(window, "focus scroll click", function(){
+		
+			// if a webkit Notification is open, kill it
+			if(n){
+				n.cancel();
 			}
-			else if("webkitNotifications" in window){
-				return window.webkitNotifications.requestPermission();
-			}
-			else {
-				return null;
-			}
-		},
 			
-		checkPermission : function(){
-			// Check whether the current desktop supports notifications and if they are authorised, 
-			// 0 (yes they are supported and permission is granted), 
-			// 1 (yes they are supported, permission has not been granted), 
-			// -1 (Notifications are not supported)
+			// if an IE overlay is present, kill it
+			if("external" in window && "msSiteModeClearIconOverlay" in window.external ){
+				window.external.msSiteModeClearIconOverlay();
+			}
+		
+			// dont do any more if we haven't got anything open
+			if(a.length===0){
+				return;
+			}
+			clearInterval(int);
 			
-			// IE9
-			if(("external" in window) && ("msIsSiteMode" in window.external)){
-				return window.external.msIsSiteMode()? 0 : 1;
-			}
-			else if("webkitNotifications" in window){
-				return window.webkitNotifications.checkPermission() === 0 ? 0 : 1;
-			}
-			else if("mozNotification" in window.navigator){
-				return 0;
-			}
-			else {
-				return -1;
-			}
-		},
-	
-		// Create a notification
-		// @icon string
-		// @title string
-		// @description string
-		// @callback function
-		createNotification : function(icon, title, description, callback){
+			int = false;
+			document.title = a[0];
+			a = [];
+			i = 0;
 			
+			// trigger any click callbacks;
+			for(i=0;i<callbacks.length;i++){
+				try{ callbacks[i](); }catch(e){}
+			}
+			callbacks = [];
+		});
+
+		// Assign it.
+		window.Notification = function(message, options){
+			//
+			// ensure this is an instance
+			if(!(this instanceof window.Notification)){
+				return new window.Notification(message,options);
+			}
+
+			//
+			options = options || {};
+
 			//
 			// Swap document.title
 			//
-			swaptitle(title);			
+			swaptitle(message);
 
 			//
-			// Add callback
-			//
-			if(callback){
-				callbacks.push(callback);
-			}
-
-			// 
 			// Create Desktop Notifications
-			// 
+			//
 			if(("external" in window) && ("msIsSiteMode" in window.external)){
 				if(window.external.msIsSiteMode()){
 					window.external.msSiteModeActivate();
 					
-					if(icon){
-						window.external.msSiteModeSetIconOverlay(icon, title);
+					if(options.icon){
+						window.external.msSiteModeSetIconOverlay(options.icon, message);
 					}
 
-					return true;
+					return;
 				}
-				return false;
+				return;
 			}
 			else if("webkitNotifications" in window){
 				if(window.webkitNotifications.checkPermission() === 0){
-					n = window.webkitNotifications.createNotification(icon, title, description )
+					n = window.webkitNotifications.createNotification(options.icon, message, options.body || '' );
 					n.show();
 					n.onclick = function(){
 						// redirect the user back to the page
@@ -171,16 +171,46 @@ window.Notification = (function(){
 					}
 					return n;
 				}
-				return false;
+				return;
 			}
 			else if( "mozNotification" in window.navigator ){
-				var m = window.navigator.mozNotification.createNotification( title, description, icon );
+				var m = window.navigator.mozNotification.createNotification( message, options.body || '', options.icon );
 				m.show();
-				return true;
+				return;
 			}
 			else {
-				return null;
+				return;
 			}
-		}
-	};
-})();
+
+		};
+
+		window.Notification.requestPermission = function(cb){
+			// Setup
+			// triggers the authentication to create a notification
+			cb = cb || function(){};
+	
+			// IE9
+			if(("external" in window) && ("msIsSiteMode" in window.external)){
+				try{
+					if( !window.external.msIsSiteMode() ){
+						window.external.msAddSiteMode();
+						cb( PERMISSION_UNKNOWN );
+					}
+				}
+				catch(e){}
+				cb( update_permission() );
+			}
+			else if("webkitNotifications" in window){
+				return window.webkitNotifications.requestPermission(function(){
+					cb( update_permission() );
+				});
+			}
+			else {
+				cb( update_permission() );
+			}
+		};
+
+		// Get the current permission
+		update_permission();
+	}
+})(window, document);

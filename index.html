@@ -13,14 +13,11 @@
 <header><h1><img src="favicon.ico" width=64 height=64 style="vertical-align:middle;margin-right:20px;">notification.js</h1></header>
 
 	<blockquote>
-		<p>This is polyfill/shim for the <a href="http://dev.w3.org/2006/webapi/WebNotifications/publish/Notifications.html">
+		<p>This is polyfill/shim for the <a href="http://www.w3.org/TR/notifications/">
 		(w3c, draft) Notifications API</a>.</p>
 		
-	<p> Simply put, this shim uses various techniques to bring a user back to a page, this could be especially useful 
-	if they were waiting for something to occur. e.g. when a video has finished 
-	uploading to Youtube or perhaps you&#39;ve received a new message in your inbox.</p>
-	
-	<p><strong>WARNING</strong>: browsers are yet to implement <a href="http://www.w3.org/TR/notifications/">http://www.w3.org/TR/notifications/</a>, when they do, this shall move the goal, can't do it now because of permissions - i should probably change the namespace to, nrrrgh</p>
+	<p>Its not a striaght forward shim, instead where a browser lacks all forms of native Notifications this shim'll adopt alternative techniques to bring a user back to a page.</p>
+
 	</blockquote>
 
 
@@ -111,55 +108,67 @@ leveraging the best the browser can offer. Checkout the techniques below.</p>
 <h2>quicky</h2>
 <h3>1. download</h3>
 
-<p><a class="source" href="https://github.com/MrSwitch/notification.js/blob/master/notification.js">notification.js</a>
-</p>
+<p><a class="source" href="./notification.js">notification.js</a></p>
+
 <br />
 <h3>2. install</h3>
+
 <pre>
 &lt;script src=&quot;notification.js&quot;&gt;&lt;/script&gt;
 </pre>
 
 <h3>3. send a message</h3>
-<p><code>createNotification( url Image, string Title, string Description);</code></p>
+<p><code>new Notification( string Message, object Options );</code></p>
+
 <pre class="tryit">
-if(Notification.checkPermission() === 1){
-	Notification.requestPermission();
-}
-Notification.createNotification("star.ico","Hello","This is a test");
+	if(Notification.permission !== 'granted'){
+		Notification.requestPermission();
+	}
+	var n = new Notification( "Hello", {
+		body: "This is a test", 
+		icon : "star.ico"
+	});
 </pre>
+
 
 <h2>enable desktop notifications</h2>
 <h3>check permission</h3>
 <p>To use the desktop notifications we need to request permission. So first lets check whether 
 your browser supports it?</p>
+
 <pre class="tryit">
-var chck = Notification.checkPermission();
-if( chck === 0 ){
-	alert("Yes enabled") 
-}
-else if( chck === 1 ){
-	alert("Browser supports it, but not enabled") 
-}
-else if( chck === -1 ){
-	alert("Browser does not support it") 
-}
+	var chck = Notification.permission;
+	if( chck === 'granted' ){
+		alert("Yes enabled") 
+	}
+	else if( chck === 'denied' ){
+		alert("Browser supports it, but not enabled") 
+	}
+	else if( chck === 'unknown' ){
+		alert("Browser does not support it") 
+	}
 </pre>
-<p>If&nbsp; <code>checkPermission === 1</code>, then perhaps prompt the user to 
+
+<p>If&nbsp; <code>Notification.permission === 'denied'</code>, then perhaps prompt the user to 
 enable it?</p>
+
 <pre>
-if(Notification.checkPermission() === 1){
-	// show a button to enable permissions
-}
+	if(Notification.permission === 'denied'){
+		// show a button to enable permissions
+	}
 </pre>
 
 <h3>request permission</h3>
+
 <pre class="tryit">
-// attach this to a button click event or automatically load it.
-Notification.requestPermission();
+	// attach this to a button click event or automatically load it.
+	Notification.requestPermission(function(permission){
+		alert(permission);
+	});
 </pre>
 
-
 <h2>that's all folks</h2>
+
 <p>Now go to first demo above and run it!</p>
 
 </body>

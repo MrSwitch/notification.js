@@ -1,8 +1,7 @@
 # What is notification.js
 notification.js is a shim/polyfill for adopting the utilizing the browsers ability to draw attention back to a page.
 
-*Demo* http://mrswitch.github.com/notification.js/
-
+*Demo* http://adodson.com/notification.js/
 
 # Contribute
 
