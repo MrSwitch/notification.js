@@ -109,11 +109,17 @@ leveraging the best the browser can offer. Checkout the techniques below.</p>
 	if(Notification.permission !== 'granted'){
 		Notification.requestPermission();
 	}
-	var n = new Notification( "Hello", {
+	n = new Notification( "Hello", {
 		body: "This is a test", 
 		icon : "star.ico"
 	});
 </pre>
+
+<p>Close it automatically [Optional]</p>
+<pre class="tryit">
+	n.close();
+</pre>
+
 
 
 <h2>enable desktop notifications</h2>

@@ -17,7 +17,7 @@
 		PERMISSION_DENIED = 'denied',
 		PERMISSION_UNKNOWN = 'unknown';
 	
-	var a = [], int, i=0, n, callbacks = [], ttl = 0;
+	var a = [], int, i=0;
 
 	//
 	// Swap the document.title with the notification
@@ -42,6 +42,25 @@
 				document.title = a[++i%a.length];
 			}, 1000);
 		}
+	}
+
+	function swapTitleCancel(){
+
+		// dont do any more if we haven't got anything open
+		if(a.length===0){
+			return;
+		}
+		
+		// if an IE overlay is present, kill it
+		if("external" in window && "msSiteModeClearIconOverlay" in window.external ){
+			window.external.msSiteModeClearIconOverlay();
+		}
+
+		clearInterval(int);
+		
+		int = false;
+		document.title = a[0];
+		a = [];
 	}
 	
 	//
@@ -96,46 +115,39 @@
 
 		//
 		// Bind event handlers to the body
-		addEvent(window, "focus scroll click", function(){
-		
-			// if a webkit Notification is open, kill it
-			if(n){
-				n.cancel();
-			}
-			
-			// if an IE overlay is present, kill it
-			if("external" in window && "msSiteModeClearIconOverlay" in window.external ){
-				window.external.msSiteModeClearIconOverlay();
-			}
-		
-			// dont do any more if we haven't got anything open
-			if(a.length===0){
-				return;
-			}
-			clearInterval(int);
-			
-			int = false;
-			document.title = a[0];
-			a = [];
-			i = 0;
-			
-			// trigger any click callbacks;
-			for(i=0;i<callbacks.length;i++){
-				try{ callbacks[i](); }catch(e){}
-			}
-			callbacks = [];
-		});
+		addEvent(window, "focus scroll click", swapTitleCancel);
 
 		// Assign it.
 		window.Notification = function(message, options){
-			//
+
 			// ensure this is an instance
 			if(!(this instanceof window.Notification)){
 				return new window.Notification(message,options);
 			}
 
+			var n, self = this;
+
 			//
 			options = options || {};
+
+			this.body = options.body || '';
+			this.icon = options.icon || '';
+			this.lang = options.lang || '';
+			this.tag = options.tag || '';
+			this.close = function(){
+
+				// remove swapTitle
+				swapTitleCancel();
+
+				// Close
+				if(Object(n).close){
+					n.close();
+				}
+
+				self.onclose();
+			};
+			this.onclick = function(){};
+			this.onclose = function(){};
 
 			//
 			// Swap document.title
@@ -148,40 +160,30 @@
 			if(("external" in window) && ("msIsSiteMode" in window.external)){
 				if(window.external.msIsSiteMode()){
 					window.external.msSiteModeActivate();
-					
-					if(options.icon){
-						window.external.msSiteModeSetIconOverlay(options.icon, message);
+					if(this.icon){
+						window.external.msSiteModeSetIconOverlay(this.icon, message);
 					}
-
-					return;
 				}
-				return;
 			}
 			else if("webkitNotifications" in window){
 				if(window.webkitNotifications.checkPermission() === 0){
-					n = window.webkitNotifications.createNotification(options.icon, message, options.body || '' );
+					n = window.webkitNotifications.createNotification(this.icon, message, this.body );
 					n.show();
 					n.onclick = function(){
+
+						// Fire any user bound events to the onclick function
+						self.onclick();
+
 						// redirect the user back to the page
 						window.focus();
 						setTimeout( function(){ n.cancel(); }, 1000);
 					};
-					if(ttl>0){
-						setTimeout( function(){ n.cancel(); }, ttl);
-					}
-					return n;
 				}
-				return;
 			}
 			else if( "mozNotification" in window.navigator ){
-				var m = window.navigator.mozNotification.createNotification( message, options.body || '', options.icon );
+				var m = window.navigator.mozNotification.createNotification( message, this.body, this.icon );
 				m.show();
-				return;
 			}
-			else {
-				return;
-			}
-
 		};
 
 		window.Notification.requestPermission = function(cb){
@@ -201,7 +203,7 @@
 				cb( update_permission() );
 			}
 			else if("webkitNotifications" in window){
-				return window.webkitNotifications.requestPermission(function(){
+				window.webkitNotifications.requestPermission(function(){
 					cb( update_permission() );
 				});
 			}
