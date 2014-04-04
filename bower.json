@@ -1,0 +1,10 @@
+{
+  "name": "notification.js",
+  "version": "0.1.0",
+  "homepage": "http://adodson.com/notification.js",
+  "description": "A simple notification library",
+  "main": "notification.js",
+  "dependencies": {
+  },
+  "devDependencies": {}
+}
