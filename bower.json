@@ -2,7 +2,7 @@
   "name": "notify",
   "main": "notification.js",
   "version": "0.0.0",
-  "homepage": "https://github.com/MrSwitch/notification.js",
+  "homepage": "http://adodson.com/notification.js",
   "authors": [
     "Andrew Dodson <sonofdod@gmail.com>"
   ],
@@ -17,5 +17,7 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {},
+  "devDependencies": {}
 }
