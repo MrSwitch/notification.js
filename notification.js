@@ -17,7 +17,7 @@
 		PERMISSION_DENIED = 'denied',
 		PERMISSION_UNKNOWN = 'unknown';
 	
-	var a = [], int, i=0;
+	var a = [], iv, i=0;
 
 	//
 	// Swap the document.title with the notification
@@ -30,8 +30,8 @@
 
 		a.push(title);
 
-		if(!int){
-			int = setInterval(function(){
+		if(!iv){
+			iv = setInterval(function(){
 
 				// has document.title changed externally?
 				if(a.indexOf(document.title) === -1 ){
@@ -56,9 +56,9 @@
 			window.external.msSiteModeClearIconOverlay();
 		}
 
-		clearInterval(int);
+		clearInterval(iv);
 		
-		int = false;
+		iv = false;
 		document.title = a[0];
 		a = [];
 	}
