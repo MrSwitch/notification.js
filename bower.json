@@ -1,7 +1,7 @@
 {
   "name": "notify",
   "main": "notification.js",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "homepage": "http://adodson.com/notification.js",
   "authors": [
     "Andrew Dodson <sonofdod@gmail.com>"
