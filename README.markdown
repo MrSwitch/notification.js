@@ -7,6 +7,9 @@ notification.js is a shim/polyfill for the Notifications API, as a shim it adopt
 
 	bower install notify
 
+	npm i notification-polyfill
+
+
 # Contribute
 
 If you think you know something i dont, please tell me i'd appreciate any help/feed back.
