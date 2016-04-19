@@ -1,0 +1,25 @@
+{
+  "name": "notification-polyfill",
+  "version": "1.0.0",
+  "description": "Polyfills the Notification API in browsers",
+  "main": "notification.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrSwitch/notification.js.git"
+  },
+  "keywords": [
+    "Notification",
+    "Notify",
+    "Notification",
+    "API"
+  ],
+  "author": "Andrew Dodson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MrSwitch/notification.js/issues"
+  },
+  "homepage": "https://github.com/MrSwitch/notification.js#readme"
+}
