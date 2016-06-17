@@ -93,9 +93,11 @@
 		if(("external" in window) && ("msIsSiteMode" in window.external)){
 			return window.external.msIsSiteMode()? PERMISSION_GRANTED : PERMISSION_UNKNOWN;
 		}
+		// Chrome, Safari
 		else if("webkitNotifications" in window){
 			return window.webkitNotifications.checkPermission() === 0 ? PERMISSION_GRANTED : PERMISSION_DENIED;
 		}
+		// Firefox
 		else if("mozNotification" in window.navigator){
 			return PERMISSION_GRANTED;
 		}
